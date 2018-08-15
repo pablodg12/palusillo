@@ -60,7 +60,7 @@ double* solve_ALU(int size, double* A, double* b){
 
 /* ############################################################*/
 
-double* palu_decomp(double* A, double* b,int size){
+double* solve_palu(double* A, double* b,int size){
 	int p_index = 0;
 	double tmp = 0;
 

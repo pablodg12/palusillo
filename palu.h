@@ -11,7 +11,7 @@ int argmax(int size, double* A,int j);
 double* row_perm(int size, double* A, int i, int j);
 
 /*Función General de la descomposición Palu */
-double* palu_decomp(double* A, double* b,int size);
+double* solve_palu(double* A, double* b,int size);
 
 /*Función que resuelve las matrices triangulares superiores e inferiores */
 double* solve_ALU(int size, double* A, double* b);
