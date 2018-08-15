@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>	
 #include "palu.h"
 
 
@@ -10,11 +10,9 @@ int main( int argc, const char* argv[] )
 	double b[ ] = {2.5,1.5,1.0,1.0,1.5,2.5};
 	double* x;
 	x = palu_decomp(A,b,size);
-
 	for (int i = 0; i < size; ++i)
 	{
 		printf("%f\n", x[i]);
 	}
-	free(x);
 	return 0;
 }

@@ -7,21 +7,6 @@
 
 /*Estas funciones se explican en palu.h*/
 
-double* generate_identity(int size){
-	double* aux =  malloc(sizeof(double)*size*size);
-	memset(aux,0,sizeof(double)*size*size);
-	for(int i=0;i<size;i++){
-		aux[i + i*size] = 1;
-	}
-	return(aux);
-};
-
-double* generate_zeros(int size){
-	double* aux =  malloc(sizeof(double)*size*size);
-	memset(aux,0,sizeof(double)*size*size);
-	return(aux);
-};
-
 int argmax(int size, double* A,int j){
 	int max_index = -1;
 	float max_value = -1.0;
@@ -63,110 +48,72 @@ double* dot(int size, double* P, double* b){
 	return(aux);
 }
 
-double* solve_triangular(int size, int upper, double* A, double* b){
-	double* x =  malloc(sizeof(double)*size);
-	if(upper == 1){
-		x[size-1] = (1.0/A[size*size-1]) * b[size-1];
+double* solve_triangular(int size, double* A, double* b){
+	double* c =  malloc(sizeof(double)*size);
+	c[0] = b[0];
+	for(int i = 1;i<size;i++){
+		float tmp = 0;
+		for(int z=0;z<i;z++){
+			tmp = tmp + A[i*size + z] * c[z];
+		}
+		c[i] = (1.0)* (b[i]-tmp);
+	}
+		b[size-1] = (1.0/A[size*size-1]) * c[size-1];
 		for(int i = size-2;i>-1;i--){
 			float tmp = 0;
 			for(int z=i+1;z<size;z++){
-				tmp = tmp + A[i*size + z] * x[z];
+				tmp = tmp + A[i*size + z] * b[z];
 			}
-			x[i] = (1.0/A[i*size+i])* (b[i]-tmp);
+			b[i] = (1.0/A[i*size+i])* (c[i]-tmp);
 		}
-		return(x);
+		return(b);
 	}
-	else{
-		x[0] = (1.0/A[0]) * b[0];
-		for(int i = 1;i<size;i++){
-			float tmp = 0;
-			for(int z=0;z<i;z++){
-				tmp = tmp + A[i*size + z] * x[z];
-			}
-			x[i] = (1.0/A[i*size+i])* (b[i]-tmp);
-		}
-		return(x);
-	}
-}
+
 
 /* ############################################################*/
 
 double* palu_decomp(double* A, double* b,int size){
 	int p_index = 0;
-	double* P = generate_identity(size);
-	double* L = generate_zeros(size);
-	double* U = A;
-	double* c;
-	double* x;
+	double tmp = 0;
+	//double* P = generate_identity(size);
 
 	/*Ciclo de PALU, se realizan las permutaciones, junto a la reducción para formar 
 	la matriz superior e inferior */
 
 	for(int j=0;j<size-1;j++){
-		p_index = argmax(size,U,j);
+		p_index = argmax(size,A,j);
 		if(p_index > 0){
-			P = row_perm(size,P,j,p_index);
-			L = row_perm(size,L,j,p_index);
-			U = row_perm(size,U,j,p_index);
+			A = row_perm(size,A,j,p_index);
+			p_index = (int) p_index/size;
+			tmp = b[j];
+			b[j] = b[p_index];
+			b[p_index]=tmp;
 		}
 
 		for(int i = j+1; i < size; i++){
-			L[i*size + j] = U[i*size + j]/U[j*size + j];
-			for(int h = 0; h < size; h++){
-				U[i*size+h] = U[i*size+h] - L[i*size + j]*U[j*size + h];
+			A[i*size + j] = A[i*size + j]/A[j*size + j];
+			for(int h = j+1; h < size; h++){
+				A[i*size+h] = A[i*size+h] - A[i*size + j]*A[j*size + h];
 			}
 		}
 
 	}
-	for(int i=0;i<size;i++){
-		L[i*size+i] = 1;
+
+	printf("---------B---------\n");
+	for(int ii = 0; ii < size; ii++){
+		printf("%f ",b[ii]);
+		printf("\n");
 	}
 
-	/*Print de las matrices P,L,U*/
-	printf("---------P--------\n");
+	printf("---------A--------\n");
 	for(int ii = 0; ii < size; ii++){
 		for(int jj = 0; jj < size; jj++){
-			printf("%f ",P[ii*size + jj]);
+			printf("%f ",A[ii*size + jj]);
 		}
 		printf("\n");
 	}
-	printf("---------L---------\n");
-	for(int ii = 0; ii < size; ii++){
-		for(int jj = 0; jj < size; jj++){
-			printf("%f ",L[ii*size + jj]);
-		}
-		printf("\n");
-	}
-	printf("---------U-------\n");
-	for(int ii = 0; ii < size; ii++){
-		for(int jj = 0; jj < size; jj++){
-			printf("%f ",U[ii*size + jj]);
-		}
-		printf("\n");
-	}
-	printf("----------------\n");
+	b = solve_triangular(size,A,b);
 
-	/* Solve dot(P,b) junto a la triangular superior e inferior*/
-	b = dot(size, P, b);
-	printf("---------b-------\n");
-	for (int i = 0; i < size; ++i)
-	{
-		printf("%f\n", b[i]);
-	}
-	c = solve_triangular(size,0,L,b);
-	printf("---------c-------\n");
-	for (int i = 0; i < size; ++i)
-	{
-		printf("%f\n", c[i]);
-	}
-	x = solve_triangular(size,1,U,c);
-	printf("---------x-------\n");
-
-	/*Se libera la memoría pedida */
-	free(P);
-	free(L);
-	free(b);
-	free(c);
-	return(x);
+	return(b);
 
 };
