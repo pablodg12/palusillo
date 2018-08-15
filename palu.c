@@ -36,18 +36,6 @@ double* row_perm(int size, double* A, int i, int j){
 	return(U);
 }
 
-double* dot(int size, double* P, double* b){
-	double* aux =  malloc(sizeof(double)*size);
-	for(int i=0;i<size;i++){
-		float tmp = 0;
-		for(int j=0;j<size;j++){
-			tmp = tmp + P[i*size + j] *b[j];
-		}
-		aux[i] = tmp;
-	}
-	return(aux);
-}
-
 double* solve_ALU(int size, double* A, double* b){
 	double* c =  malloc(sizeof(double)*size);
 	c[0] = b[0];
@@ -66,6 +54,7 @@ double* solve_ALU(int size, double* A, double* b){
 			}
 			b[i] = (1.0/A[i*size+i])* (c[i]-tmp);
 		}
+		free(c);
 		return(b);
 	}
 

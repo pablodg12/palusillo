@@ -13,8 +13,5 @@ double* row_perm(int size, double* A, int i, int j);
 /*Función General de la descomposición Palu */
 double* palu_decomp(double* A, double* b,int size);
 
-/*Función para realizar el producto punto */
-double* dot(int size, double* P, double* b);
-
 /*Función que resuelve las matrices triangulares superiores e inferiores */
 double* solve_ALU(int size, double* A, double* b);
