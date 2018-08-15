@@ -43,7 +43,7 @@ double* solve_ALU(int size, double* A, double* b){
 		for(int z=0;z<i;z++){
 			tmp = tmp + A[i*size + z] * c[z];
 		}
-		c[i] = (1.0)* (b[i]-tmp);
+		c[i] = b[i]-tmp;
 	}
 	b[size-1] = (1.0/A[size*size-1]) * c[size-1];
 	for(int i = size-2;i>-1;i--){
