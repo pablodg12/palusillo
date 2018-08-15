@@ -23,17 +23,16 @@ int argmax(int size, double* A,int j){
 
 double* row_perm(int size, double* A, int i, int j){
 	double aux[size];
-	double* U = A;
 	for(int h = 0; h < size; h++){
-		aux[h] = U[i*size + h];
+		aux[h] = A[i*size + h];
 	}
 	for(int h = 0; h < size; h++){
-		U[i*size + h] = U[(j-i) + h];
+		A[i*size + h] = A[(j-i) + h];
 	}
 	for(int h = 0; h < size; h++){
-		U[(j-i) + h] = aux[h];
+		A[(j-i) + h] = aux[h];
 	}
-	return(U);
+	return(A);
 }
 
 double* solve_ALU(int size, double* A, double* b){
@@ -87,21 +86,7 @@ double* palu_decomp(double* A, double* b,int size){
 
 	}
 
-	printf("---------B---------\n");
-	for(int ii = 0; ii < size; ii++){
-		printf("%f ",b[ii]);
-		printf("\n");
-	}
-
-	printf("---------A--------\n");
-	for(int ii = 0; ii < size; ii++){
-		for(int jj = 0; jj < size; jj++){
-			printf("%f ",A[ii*size + jj]);
-		}
-		printf("\n");
-	}
 	b = solve_ALU(size,A,b);
 
 	return(b);
-
 };
