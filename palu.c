@@ -48,7 +48,7 @@ double* dot(int size, double* P, double* b){
 	return(aux);
 }
 
-double* solve_triangular(int size, double* A, double* b){
+double* solve_ALU(int size, double* A, double* b){
 	double* c =  malloc(sizeof(double)*size);
 	c[0] = b[0];
 	for(int i = 1;i<size;i++){
@@ -75,7 +75,6 @@ double* solve_triangular(int size, double* A, double* b){
 double* palu_decomp(double* A, double* b,int size){
 	int p_index = 0;
 	double tmp = 0;
-	//double* P = generate_identity(size);
 
 	/*Ciclo de PALU, se realizan las permutaciones, junto a la reducción para formar 
 	la matriz superior e inferior */
@@ -112,7 +111,7 @@ double* palu_decomp(double* A, double* b,int size){
 		}
 		printf("\n");
 	}
-	b = solve_triangular(size,A,b);
+	b = solve_ALU(size,A,b);
 
 	return(b);
 

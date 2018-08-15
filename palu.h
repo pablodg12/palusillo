@@ -17,4 +17,4 @@ double* palu_decomp(double* A, double* b,int size);
 double* dot(int size, double* P, double* b);
 
 /*Función que resuelve las matrices triangulares superiores e inferiores */
-double* solve_triangular(int size, double* A, double* b);
+double* solve_ALU(int size, double* A, double* b);
