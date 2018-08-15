@@ -45,13 +45,13 @@ double* solve_ALU(int size, double* A, double* b){
 		}
 		c[i] = (1.0)* (b[i]-tmp);
 	}
-		b[size-1] = (1.0/A[size*size-1]) * c[size-1];
-		for(int i = size-2;i>-1;i--){
-			float tmp = 0;
-			for(int z=i+1;z<size;z++){
-				tmp = tmp + A[i*size + z] * b[z];
-			}
-			b[i] = (1.0/A[i*size+i])* (c[i]-tmp);
+	b[size-1] = (1.0/A[size*size-1]) * c[size-1];
+	for(int i = size-2;i>-1;i--){
+		float tmp = 0;
+		for(int z=i+1;z<size;z++){
+			tmp = tmp + A[i*size + z] * b[z];
+		}
+		b[i] = (1.0/A[i*size+i])* (c[i]-tmp);
 		}
 		free(c);
 		return(b);
